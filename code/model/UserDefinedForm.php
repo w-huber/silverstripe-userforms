@@ -499,7 +499,7 @@ JS
      */
     public function process($data, $form)
     {
-        $submittedForm = Object::create('SubmittedForm');
+        $submittedForm = SubmittedForm::create();
         $submittedForm->SubmittedByID = ($id = Member::currentUserID()) ? $id : 0;
         $submittedForm->ParentID = $this->ID;
 
@@ -768,6 +768,7 @@ JS
             $conjunction = $rule['conjunction'];
             $operations = implode(" {$conjunction} ", $rule['operations']);
             $target = $rule['targetFieldID'];
+            $holder = $rule['holder'];
 
             $result .= <<<EOS
 \n
@@ -776,8 +777,10 @@ JS
     function (){
         if ({$operations}) {
             $('{$target}').{$rule['view']};
+            {$holder}.{$rule['view']}.trigger('{$rule['holder_event']}');
         } else {
             $('{$target}').{$rule['opposite']};
+            {$holder}.{$rule['opposite']}.trigger('{$rule['holder_event_opposite']}');
         }
     });
     $("{$target}").find('.hide').removeClass('hide');
