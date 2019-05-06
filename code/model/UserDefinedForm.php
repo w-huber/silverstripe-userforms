@@ -745,7 +745,13 @@ JS
         );
 
         $this->extend('updateReceivedFormSubmissionData', $data);
-
+        
+        $finishedLink = Session::get('ContentUserDefinedFormFinishedLink');
+        if ($finishedLink) {
+            Session::clear('ContentUserDefinedFormFinishedLink');
+            return $this->redirect($finishedLink);
+        }
+    
         return $this->customise(array(
             'Content' => $this->customise($data)->renderWith('ReceivedFormSubmission'),
             'Form' => '',
